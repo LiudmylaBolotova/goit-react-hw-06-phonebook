@@ -1,50 +1,40 @@
-import { useState } from 'react';
-import propTypes from 'prop-types';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selector';
 import { BtnForm, Form, InputForm, TitleForm } from './ContactForm.styled';
 
-export function ContactForm({ formSubmitHandler }) {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+export function ContactForm() {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
-  const handleChangeInput = event => {
-    const { name, value } = event.target;
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-      case 'number':
-        setNumber(value);
-        break;
-      default:
-        return;
-    }
-  };
-
-  const onSubmitForm = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-
-    formSubmitHandler({ name, number });
-    reset();
+    const form = event.currentTarget;
+    const name = form.elements.name.value;
+    const number = form.elements.number.value;
+    if (
+      contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      return alert('Enter your request!');
+    }
+    form.reset();
+    dispatch(addContact({ name, number }));
   };
-
-  function reset() {
-    setName('');
-    setNumber('');
-  }
 
   return (
     <div>
-      <Form onSubmit={onSubmitForm}>
+      <Form onSubmit={handleSubmit}>
         <TitleForm>Name</TitleForm>
         <label>
           <InputForm
             type="text"
             name="name"
-            value={name.trim()}
-            onChange={handleChangeInput}
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
+            // pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            // title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            // required
           />
         </label>
         <TitleForm>Number</TitleForm>
@@ -52,11 +42,9 @@ export function ContactForm({ formSubmitHandler }) {
           <InputForm
             type="tel"
             name="number"
-            value={number.trim()}
-            onChange={handleChangeInput}
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
+            // pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            // title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            // required
           />
         </label>
         <BtnForm type="submit">Add contact</BtnForm>
@@ -64,7 +52,3 @@ export function ContactForm({ formSubmitHandler }) {
     </div>
   );
 }
-
-ContactForm.propTypes = {
-  formSubmitHandler: propTypes.func.isRequired,
-};

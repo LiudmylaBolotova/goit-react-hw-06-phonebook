@@ -6,10 +6,7 @@ export const BtnList = styled.button`
 
   border: ${p => p.theme.borders.small};
   border-radius: ${p => p.theme.radii.btnRound}px;
-
   margin-top: ${p => p.theme.space[3]}px;
-  margin-left: ${p => p.theme.space[3]}px;
-
   cursor: pointer;
 
   font-size: ${p => p.theme.fontSizes[0]}px;
@@ -25,10 +22,10 @@ export const BtnList = styled.button`
   }
 `;
 
-export const Element = styled.div`
+export const Element = styled.li`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   padding-bottom: ${p => p.theme.space[4]}px;
 `;
